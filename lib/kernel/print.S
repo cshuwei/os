@@ -2,6 +2,9 @@ TI_GDT equ  0
 RPL0  equ   0
 SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0
 
+section .data
+buffer   dq    0
+
 [bits 32]
 section .text
 ---------------------------------------------------------  
@@ -127,5 +130,55 @@ put_char:
    mov al, bl
    out dx, al
  .put_char_done: 
+   popad
+   ret
+
+global put_int
+put_int:
+   pushad
+   mov ebp, esp
+   mov eax, [ebp + 4 * 9]
+   mov edx, eax
+   mov edi, 7
+   mov ecx, 8
+   mov ebx, buffer
+.16based:
+   and edx, 0x0000000F
+   cmp edx, 9
+   jg  .AtoF
+   add edx, '0'
+   jmp .store
+.AtoF:
+   sub edx, 10
+   add edx, 'A'
+.store:
+   mov [ebx + edi], dl
+   dec edi
+   shr eax, 4
+   mov edx, eax
+   loop .16based
+
+.ready_to_print:
+   inc edi
+.skip_0:
+   cmp edi, 8
+   je .full0
+.go_on_skip:
+   mov cl, [buffer + edi]
+   inc edi
+   cmp cl, '0'
+   je .skip_0
+   dec edi
+   jmp .put_num
+.full0:
+   mov cl, '0'
+.put_num:
+   push ecx
+   call put_char
+   add esp, 4
+   inc edi
+   mov cl, [buffer + edi]
+   cmp edi, 8
+   jl .put_num
    popad
    ret
