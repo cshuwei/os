@@ -1,2 +1,2 @@
 # os
-just make a os by myself
+just make an os to learn how os works
