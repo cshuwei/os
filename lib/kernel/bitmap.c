@@ -9,7 +9,7 @@ void bitmap_init(struct bitmap* btmp) {
 	memset(btmp->bits, 0, btmp->btmp_bytes_len);
 }
 
-bool bitmap_scan_test(struct bitmap* btmp, uint32_t bit_idx) {
+int bitmap_scan_test(struct bitmap* btmp, uint32_t bit_idx) {
 	uint32_t byte_idx = bit_idx / 8;
 	uint32_t bit_odd = bit_idx % 8;
 	return (btmp->bits[byte_idx] & (BITMAP_MASK << bit_odd));
@@ -22,11 +22,11 @@ int bitmap_scan(struct bitmap* btmp, uint32_t cnt) {
 
 	ASSERT(idx_byte < btmp->btmp_bytes_len);
 	if (idx_byte == btmp->btmp_bytes_len) {
-		return -1
+		return -1;
 	}
 	
 	int idx_bit = 0;
-	while((uint_t)(BITMAP_MASK << idx_bit) & btmp->bits[idx_byte])	{
+	while((uint8_t)(BITMAP_MASK << idx_bit) & btmp->bits[idx_byte])	{
 		idx_bit++;
 	}
 	
@@ -61,6 +61,6 @@ void bitmap_set(struct bitmap* btmp, uint32_t bit_idx, int8_t value) {
 	if(value) {
 		btmp->bits[byte_idx] |= (BITMAP_MASK << bit_odd);
 	} else {
-		btmp->bits[byte_idx] &= ~(BIMAP_MASK << bit_odd);
+		btmp->bits[byte_idx] &= ~(BITMAP_MASK << bit_odd);
 	}
 }

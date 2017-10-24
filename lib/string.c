@@ -28,6 +28,7 @@ int memcmp(const void* a_, const void* b_, uint32_t size){
 	a++;
 	b++;
 	}
+	return 0;
 }
 
 char* strcpy(char* dst_, const char* src_) {
@@ -74,7 +75,7 @@ char* strrchr(const char* str, const uint8_t ch) {
 		}
 		str++;		
 	}
-	retrun (char*)last_char;	
+	return (char*)last_char;	
 }
 
 

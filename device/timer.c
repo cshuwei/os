@@ -24,6 +24,6 @@ static void frequency_set(uint8_t counter_port,
 void timer_init() {
 	put_str("timer_init start\n");
 	frequency_set(COUNTER0_PORT, COUNTER0_NO, READ_WRITE_LATCH, COUNTER_MODE, COUNTER0_VALUE);
-	put_str("timer_init down\n");
+	put_str("timer_init done\n");
 }
 
