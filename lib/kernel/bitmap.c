@@ -31,10 +31,10 @@ int bitmap_scan(struct bitmap* btmp, uint32_t cnt) {
 	}
 	
 	int bit_idx_start = idx_byte * 8 + idx_bit;
-	if (cnt == 1) {
+	if (1 == cnt) {
 		return bit_idx_start;
 	}
-	uint32_t bit_left = (btmp->btmp_bytes_len * - bit_idx_start);
+	uint32_t bit_left = (btmp->btmp_bytes_len * 8 - bit_idx_start);
 	uint32_t next_bit = bit_idx_start + 1;
 	uint32_t count = 1;
 	
