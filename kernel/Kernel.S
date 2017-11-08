@@ -93,3 +93,24 @@ VECTOR 0x2c,ZERO
 VECTOR 0x2d,ZERO
 VECTOR 0x2e,ZERO
 VECTOR 0x2f,ZERO
+
+[bits 32]
+extern syscall_table
+section .text
+global syscall_handler
+syscall_handler:
+    push 0
+    push ds
+    push es
+    push fs
+    push gs
+    pushad
+    push 0x80
+    push edx
+    push ecx
+    push ebx
+    call [syscall_table + eax * 4]
+    add esp, 12
+    mov [esp + 8 * 4], eax
+    jmp intr_exit
+

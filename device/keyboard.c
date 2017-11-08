@@ -146,10 +146,12 @@ static void intr_keyboard_handler(void) {
 		uint8_t index = (scancode &= 0x00ff);
 		char cur_char = keymap[index][shift];
 		if(cur_char) {
-                        if (!ioq_full(&kbd_buf)) {
-			        put_char(cur_char);
-                                ioq_putchar(&kbd_buf, cur_char);
-                        }
+             if ((ctrl_down_last && cur_char == 'l') || (ctrl_down_last && cur_char == 'u')) {
+                 cur_char -= 'a';
+             }
+             if (!ioq_full(&kbd_buf)) {
+                   ioq_putchar(&kbd_buf, cur_char);
+             }
 			return;
 		}	
 
@@ -173,7 +175,7 @@ static void intr_keyboard_handler(void) {
 
 void keyboard_init(void) {
 	put_str("keyboard init start\n");
-        ioqueue_init(&kbd_buf);
+    ioqueue_init(&kbd_buf);
 	register_handler(0x21, intr_keyboard_handler);
 	put_str("keyboard init done\n");
 }
