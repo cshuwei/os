@@ -14,7 +14,7 @@ OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o   \
        $(BUILD_DIR)/switch.o  $(BUILD_DIR)/console.o $(BUILD_DIR)/sync.o  \
        $(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ioqueue.o  $(BUILD_DIR)/tss.o \
        $(BUILD_DIR)/process.o  $(BUILD_DIR)/syscall.o  $(BUILD_DIR)/syscall-init.o \
-	   $(BUILD_DIR)/stdio.o 
+	   $(BUILD_DIR)/stdio.o    $(BUILD_DIR)/stdio-kernel.o 
 $(BUILD_DIR)/main.o: kernel/main.c lib/kernel/print.h lib/stdint.h kernel/init.h kernel/memory.h
 	$(CC) $(CFLAGS) $< -o $@
 
@@ -75,6 +75,8 @@ $(BUILD_DIR)/stdio.o: lib/stdio.c lib/stdio.h lib/stdint.h kernel/interrupt.h \
     	lib/stdint.h kernel/global.h lib/string.h lib/user/syscall.h lib/kernel/print.h
 	$(CC) $(CFLAGS) $< -o $@
 
+$(BUILD_DIR)/stdio-kernel.o: lib/kernel/stdio-kernel.c  lib/kernel/stdio-kernel.h kernel/debug.h lib/kernel/print.h lib/stdint.h lib/string.h kernel/interrupt.h 
+	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/kernel.o: kernel/kernel.S
 	$(AS) $(ASFLAGS) $< -o $@

@@ -13,6 +13,9 @@
 #define COUNTER_MODE	   	2
 #define READ_WRITE_LATCH   	3
 #define PIT_CONTROL_PORT   	0x43	
+#define mseconds_per_intr (1000 / IRQ0_FREQUENCY)
+
+
 
 static void frequency_set(uint8_t counter_port,
 			  uint8_t counter_no,
@@ -45,3 +48,17 @@ void timer_init() {
 	put_str("timer_init done\n");
 }
 
+
+static void ticks_to_sleep(uint32_t sleep_ticks) {
+    uint32_t start_tick = ticks;
+    while(ticks - start_tick < sleep_ticks) {
+        thread_yield();
+    }
+}
+
+
+void mtime_sleep(uint32_t m_seconds) {
+    uint32_t sleep_ticks = DIV_ROUND_UP(m_seconds, mseconds_per_intr);
+    ASSERT(sleep_ticks > 0);
+    ticks_to_sleep(sleep_ticks);
+}
