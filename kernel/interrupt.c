@@ -50,7 +50,7 @@ static void pic_init(void) {
 	outb (PIC_S_DATA, 0xff);
 
     outb (PIC_M_DATA, 0xf8);
-    outb (PIC_M_DATA, 0xbf);
+    outb (PIC_S_DATA, 0xbf);
 	put_str("  pic_init done\n");
 }
 
