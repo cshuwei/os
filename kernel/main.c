@@ -8,6 +8,8 @@
 #include "syscall-init.h"
 #include "syscall.h"
 #include "stdio.h"
+#include "fs.h"
+#include "file.h"
 void k_thread_a(void* arg);
 void k_thread_b(void* arg);
 void u_prog_a(void);
@@ -28,7 +30,7 @@ int main(void){
 //    console_put_char('\n');
 	thread_start("k_thread_a", 31, k_thread_a, "argA ");
 	thread_start("k_thread_a", 31, k_thread_b, "argB ");
-    
+    sys_open("/file1", O_CREAT);    
 	while(1);//{ 
 //        	console_put_str("MAIN ");
 //	}
