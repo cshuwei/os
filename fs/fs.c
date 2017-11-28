@@ -11,7 +11,7 @@
 #include "global.h"
 #include "debug.h"
 #include "memory.h"
-
+#include "console.h"
 struct partition* cur_part;
 
 static bool mount_partition(struct list_elem* pelem, int arg) {
@@ -261,9 +261,43 @@ int32_t sys_open(const char* pathname, uint8_t flags) {
             printk("creating file\n");
             fd = file_create(searched_record.parent_dir, (strrchr(pathname, '/') + 1), flags);
             dir_close(searched_record.parent_dir);
+            break;
+        default:
+            fd = file_open(inode_no, flags);
     }
     return fd;
 }
+
+static uint32_t fd_local2global(uint32_t local_fd) {
+   struct task_struct* cur = running_thread();
+   int32_t global_fd = cur->fd_table[local_fd];  
+   ASSERT(global_fd >= 0 && global_fd < MAX_FILE_OPEN);
+   return (uint32_t)global_fd;
+} 
+
+int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {
+    if (fd < 0) {
+        printk("sys_write: fd error\n");
+        return -1;
+    }
+    if (fd == stdout_no) {
+        char tmp_buf[1024] = {0};
+        memcpy(tmp_buf, buf, count);
+        console_put_str(tmp_buf);
+        return count;
+    }
+
+    uint32_t _fd = fd_local2global(fd);
+    struct file* wr_file = &file_table[_fd];
+    if (wr_file->fd_flag & O_WRONLY || wr_file->fd_flag & O_RDWR) {
+        uint32_t bytes_written = file_write(wr_file, buf, count);
+        return bytes_written;
+    } else {
+        console_put_str("sys_write: not allowed to write file without flag O_RDWR or O_WRONLY\n");
+        return -1;
+    }
+}
+
 void filesys_init() {
     uint8_t channel_no = 0, dev_no, part_idx = 0;
     struct super_block* sb_buf = (struct super_block*)sys_malloc(SECTOR_SIZE);
@@ -311,4 +345,5 @@ void filesys_init() {
         file_table[fd_idx++].fd_inode = NULL;
     }
 }
+
 
