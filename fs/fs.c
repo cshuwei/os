@@ -273,7 +273,17 @@ static uint32_t fd_local2global(uint32_t local_fd) {
    int32_t global_fd = cur->fd_table[local_fd];  
    ASSERT(global_fd >= 0 && global_fd < MAX_FILE_OPEN);
    return (uint32_t)global_fd;
-} 
+}
+ 
+int32_t sys_read(int32_t fd, void* buf, uint32_t count) {
+    if (fd < 0) {
+        printk("sys_read: fd error\n");
+        return -1;
+    }
+    ASSERT(buf != NULL);
+    uint32_t _fd = fd_local2global(fd);
+    return file_read(&file_table[_fd], buf, count);
+}
 
 int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {
     if (fd < 0) {
@@ -345,5 +355,4 @@ void filesys_init() {
         file_table[fd_idx++].fd_inode = NULL;
     }
 }
-
 
