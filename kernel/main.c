@@ -35,7 +35,8 @@ int main(void){
  //   sys_write(fd, "hello, world\n", 12);
  //   sys_close(fd);
  //   printf("%d closed now\n", fd);    
-    uint32_t fd = sys_open("/file1", O_RDWR);
+ //  
+/*  uint32_t fd = sys_open("/file1", O_RDWR);
     printf("open /file1, fd:%d\n", fd);
     char  buf[64] = {0};
     int read_bytes = sys_read(fd, buf, 18);
@@ -56,7 +57,9 @@ int main(void){
     read_bytes = sys_read(fd, buf, 24);
     printf("4_read %d bytes:\n%s", read_bytes, buf);
     sys_close(fd);
-	while(1);//{ 
+*/
+	printf("/file1 delete %s!\n", sys_unlink("/file1") == 0 ? "done" : "fail");
+    while(1);//{ 
 //        	console_put_str("MAIN ");
 //	}
 	return 0;
