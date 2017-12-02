@@ -252,6 +252,7 @@ bool delete_dir_entry(struct partition* part, struct dir* pdir, uint32_t inode_n
         inode_sync(part, dir_inode, io_buf);
         return true;
     }
+    return false;
 }
 
 
