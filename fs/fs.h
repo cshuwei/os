@@ -28,6 +28,11 @@ enum whence {
     SEEK_END
 };
 
+struct stat {
+    uint32_t st_ino;
+    uint32_t st_size;
+    enum file_types st_filetype;
+};
 struct path_search_record {
     char searched_path[MAX_PATH_LEN];
     struct dir* parent_dir;
@@ -49,8 +54,8 @@ int32_t sys_rmdir(const char* pathname);
 struct dir* sys_opendir(const char* name);
 struct dir_entry* sys_readdir(struct dir* dir);
 void sys_rewinddir(struct dir* dir);
-
+char* sys_getcwd(char* buf, uint32_t size);
+int32_t sys_chdir(const char* path);
+int32_t sys_stat(const char* path, struct stat* buf);
 #endif
-
-
 

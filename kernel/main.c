@@ -10,6 +10,7 @@
 #include "stdio.h"
 #include "fs.h"
 #include "file.h"
+/*
 void k_thread_a(void* arg);
 void k_thread_b(void* arg);
 void u_prog_a(void);
@@ -36,7 +37,7 @@ int main(void){
  //   sys_close(fd);
  //   printf("%d closed now\n", fd);    
  //  
-/*  uint32_t fd = sys_open("/file1", O_RDWR);
+    uint32_t fd = sys_open("/file1", O_RDWR);
     printf("open /file1, fd:%d\n", fd);
     char  buf[64] = {0};
     int read_bytes = sys_read(fd, buf, 18);
@@ -57,7 +58,7 @@ int main(void){
     read_bytes = sys_read(fd, buf, 24);
     printf("4_read %d bytes:\n%s", read_bytes, buf);
     sys_close(fd);
-*/
+
 //	printf("/file1 delete %s!\n", sys_unlink("/file1") == 0 ? "done" : "fail");
     printf("/dir1/subdir1 create %s!\n", sys_mkdir("/dir1/subdir1") == 0 ? "done" : "fail");
     printf("/dir1 create %s\n", sys_mkdir("/dir1") == 0 ? "done" : "fail");
@@ -152,4 +153,28 @@ void u_prog_b(void) {
     free(addr3);
     while(1);
 }
+*/
 
+int main(void) {
+    put_str("I am kernel\n");
+    init_all();
+/*    char cwd_buf[32] = {0};
+    sys_getcwd(cwd_buf, 32);
+    printf("cwd:%s\n", cwd_buf);
+    sys_chdir("/dir1");
+    printf("change cwd now\n");
+    sys_getcwd(cwd_buf, 32);
+    printf("cwd:%s\n", cwd_buf);
+*/
+    struct stat obj_stat;
+    sys_stat("/", &obj_stat);
+    printf("/`s info\n  i_no:%d\n   size:%d\n   filetype:%s\n",\
+            obj_stat.st_ino, obj_stat.st_size,\
+            obj_stat.st_filetype == 2 ? "directory" : "regular");
+    sys_stat("/dir1", &obj_stat);
+    printf("/dir1`s info\n  i_no:%d\n   size:%d\n   filetype:%s\n",\
+            obj_stat.st_ino, obj_stat.st_size,\
+            obj_stat.st_filetype == 2 ? "directory" : "regular");
+    while(1);
+    return 0;   
+}
