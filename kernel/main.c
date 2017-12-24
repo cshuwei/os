@@ -155,6 +155,7 @@ void u_prog_b(void) {
 }
 */
 
+void init(void);
 int main(void) {
     put_str("I am kernel\n");
     init_all();
@@ -166,7 +167,7 @@ int main(void) {
     sys_getcwd(cwd_buf, 32);
     printf("cwd:%s\n", cwd_buf);
 */
-    struct stat obj_stat;
+/*    struct stat obj_stat;
     sys_stat("/", &obj_stat);
     printf("/`s info\n  i_no:%d\n   size:%d\n   filetype:%s\n",\
             obj_stat.st_ino, obj_stat.st_size,\
@@ -177,4 +178,18 @@ int main(void) {
             obj_stat.st_filetype == 2 ? "directory" : "regular");
     while(1);
     return 0;   
+*/
+    while(1);
+    return 0;
+}
+
+void init(void) {
+    printf("my pid is %d", getpid());
+    uint32_t ret_pid = fork();
+    if (ret_pid) {
+        printf("I am father, my pid is %d, child pid is %d\n", getpid(), ret_pid);
+    } else {
+        printf("I am child, my pid is %d, ret pid is %d\n", getpid(), ret_pid);
+    }
+    while(1);
 }

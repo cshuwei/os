@@ -66,6 +66,7 @@ struct task_struct {
     struct virtual_addr userprog_vaddr;
     struct mem_block_desc u_block_desc[DESC_CNT];
     uint32_t cwd_inode_nr;
+    int16_t parent_pid;
 	uint32_t stack_magic;
 };
 
@@ -81,4 +82,5 @@ void thread_init(void);
 void thread_block(enum task_status stat);
 void thread_unblock(struct task_struct* pthread);
 void thread_yield(void);
+pid_t fork_pid(void);
 #endif

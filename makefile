@@ -16,7 +16,7 @@ OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o   \
        $(BUILD_DIR)/process.o  $(BUILD_DIR)/syscall.o  $(BUILD_DIR)/syscall-init.o \
 	   $(BUILD_DIR)/stdio.o    $(BUILD_DIR)/stdio-kernel.o  $(BUILD_DIR)/ide.o \
 	   $(BUILD_DIR)/fs.o       $(BUILD_DIR)/dir.o			$(BUILD_DIR)/inode.o\
-	   $(BUILD_DIR)/file.o	
+	   $(BUILD_DIR)/file.o	   $(BUILD_DIR)/fork.o	
 $(BUILD_DIR)/main.o: kernel/main.c lib/kernel/print.h lib/stdint.h kernel/init.h kernel/memory.h
 	$(CC) $(CFLAGS) $< -o $@
 
@@ -97,6 +97,10 @@ $(BUILD_DIR)/inode.o: fs/inode.c fs/inode.h fs/fs.h lib/stdint.h device/ide.h th
 $(BUILD_DIR)/file.o: fs/file.c fs/file.h fs/fs.h lib/stdint.h device/ide.h thread/sync.h lib/kernel/list.h kernel/global.h thread/thread.h lib/kernel/bitmap.h kernel/memory.h \
 					fs/super_block.h fs/inode.h fs/dir.h lib/kernel/stdio-kernel.h lib/string.h lib/stdint.h kernel/debug.h kernel/interrupt.h lib/kernel/print.h
 	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/fork.o: userprog/fork.c userprog/fork.h thread/thread.h lib/stdint.h kernel/global.h lib/kernel/bitmap.h kernel/memory.h userprog/process.h kernel/interrupt.h\
+					lib/kernel/stdio-kernel.h lib/kernel/list.h kernel/debug.h
+	$(CC) $(CFLAGS) $< -o  $@
 
 $(BUILD_DIR)/kernel.o: kernel/kernel.S
 	$(AS) $(ASFLAGS) $< -o $@

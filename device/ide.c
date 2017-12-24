@@ -320,7 +320,7 @@ void ide_init() {
         dev_no = 0;            
         channel_no++;
     }
-    printk("ide_init done\n");
+    printk("\n   all partition info\n");
     list_traversal(&partition_list, partition_info, (int)NULL);
     printk("ide_init done\n");
 } 

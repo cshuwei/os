@@ -16,7 +16,7 @@ struct list thread_ready_list;
 struct list thread_all_list;
 struct lock pid_lock;
 static struct list_elem* thread_tag;
-
+extern void init(void);
 extern void switch_to(struct task_struct* cur, struct task_struct* next);
 
 static void idle(void* arg /*UNUSED*/) {
@@ -38,6 +38,10 @@ static pid_t allocate_pid(void) {
     next_pid++;
     lock_release(&pid_lock);
     return next_pid;
+}
+
+pid_t fork_pid(void) {
+   return allocate_pid();
 }
 
 static void kernel_thread(thread_func* function, void* func_arg) {
@@ -81,6 +85,7 @@ void init_thread(struct task_struct* pthread, char* name, int prio) {
         fd_idx++;
     }
     pthread->cwd_inode_nr = 0;
+    pthread->parent_pid = -1;
 	pthread->stack_magic = 0x20171025;
 }
 
@@ -131,6 +136,7 @@ void thread_init(void) {
 	list_init(&thread_ready_list);
 	list_init(&thread_all_list);
     lock_init(&pid_lock);
+    process_execute(init, "init");
 	make_main_thread();
     idle_thread = thread_start("idle", 10, idle, NULL);
 	put_str("thread_init done\n");
@@ -169,6 +175,5 @@ void thread_yield(void) {
     schedule();
     intr_set_status(old_status);
 }	
-
 
 
