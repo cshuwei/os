@@ -19,7 +19,7 @@ int ioq_full(struct ioqueue* ioq) {
 }
 
 static int ioq_empty(struct ioqueue* ioq) {
-        ASSERT(intr_get_status() == INTR_ON);
+        ASSERT(intr_get_status() == INTR_OFF);
         return ioq->head == ioq->tail;
 }
 

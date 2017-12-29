@@ -10,6 +10,7 @@
 #include "stdio.h"
 #include "fs.h"
 #include "file.h"
+#include "shell.h"
 /*
 void k_thread_a(void* arg);
 void k_thread_b(void* arg);
@@ -159,6 +160,8 @@ void init(void);
 int main(void) {
     put_str("I am kernel\n");
     init_all();
+//    cls_screen();
+    console_put_str("[csw@localhost /]$ ");
 /*    char cwd_buf[32] = {0};
     sys_getcwd(cwd_buf, 32);
     printf("cwd:%s\n", cwd_buf);
@@ -179,17 +182,16 @@ int main(void) {
     while(1);
     return 0;   
 */
-    while(1);
+//    while(1);
     return 0;
 }
 
 void init(void) {
-    printf("my pid is %d", getpid());
     uint32_t ret_pid = fork();
     if (ret_pid) {
-        printf("I am father, my pid is %d, child pid is %d\n", getpid(), ret_pid);
+        while(1);
     } else {
-        printf("I am child, my pid is %d, ret pid is %d\n", getpid(), ret_pid);
+        my_shell();
     }
-    while(1);
+    printf("init: should not be here");
 }
